@@ -24,27 +24,20 @@ export const MapCotextsProvider = ({ children }) => {
         }),
       ],
       view: new View({
-        center: [longitude, latitude],  // Set initial center
-        zoom: 2,
+        center: [longitude, latitude], 
       }),
     });
-
     setMap(newMap);
-
-    // Hapus marker jika peta di-unmount
     return () => {
       if (newMap) {
         newMap.getOverlays().clear();
       }
     };
-  }, [latitude, longitude]);  // Add latitude and longitude as dependencies
+  }, [latitude, longitude]); 
 
   // Fungsi untuk menambahkan marker pada peta
   const addMarker = (lat, lon) => {
-    // Hapus marker yang sudah ada
     map.getOverlays().clear();
-
-    // Tambahkan marker baru pada peta
     const marker = new Overlay({
       position: [lon, lat],
       positioning: 'center-center',
