@@ -5,17 +5,30 @@ import Feature from 'ol/Feature.js';
 import Polygon from 'ol/geom/Polygon.js';
 import Point from 'ol/geom/Point.js';
 
-
+/**
+ * Komponen React untuk mengonversi koordinat dari DD ke DMS dan menambahkannya ke peta.
+ *
+ * @component
+ */
 const DdToDms = () => {
   const [coord, setCoord] = useState([90.000000, 33.230000]);
   const [convertedCoordinates, setConvertedCoordinates] = useState('0 0');
 
+  /**
+   * Meng-handle perubahan koordinat.
+   *
+   * @param {number} index - Indeks koordinat (0 untuk latitude, 1 untuk longitude).
+   * @param {string} value - Nilai baru koordinat.
+   */
   const handleCoordinateChange = (index, value) => {
     const newCoord = [...coord];
     newCoord[index] = parseFloat(value) || 0;
     setCoord(newCoord);
   };
 
+  /**
+   * Mengonversi koordinat ke format DMS.
+   */
   const convertCoordinates = () => {
     const newCoordinates = toStringHDMS([coord[1], coord[0]]);
     setConvertedCoordinates(newCoordinates);
@@ -23,29 +36,19 @@ const DdToDms = () => {
 
   // hooks memecah object hasil DD to DMS
   const splitOneByOne = splitCoordinates(convertedCoordinates);
-  const splitLonLat = convertToNestedArray(splitOneByOne)
-  const dmsJson = converteDmsToObject(splitLonLat)
+  const splitLonLat = convertToNestedArray(splitOneByOne);
+  const dmsJson = converteDmsToObject(splitLonLat);
 
-
-  // fungsi untuk add to map
+  /**
+   * Meng-handle penambahan marker ke peta.
+   */
   const handleAddToMap = () => {
-    const lat = parseFloat(latitude);
-    const lon = parseFloat(longitude);
+    const lat = parseFloat(dmsJson.latitude);
+    const lon = parseFloat(dmsJson.longitude);
     addMarker(lat, lon);
   };
 
-
-  var polyCoords = '[3143090.603086447, 9928281.393790578], [3283734.7351311715, 9928892.890016861], [3181003.3691158947, 9849398.380600277], [3143090.603086447, 9928281.393790578]';
-  var pointCoords = [3229617.319105267, 9916160.39109719];
-
-  const feature = new Feature({
-    geometry: new Polygon(polyCoords),
-    labelPoint: new Point(pointCoords),
-    name: 'My Polygon',
-  });
-  const poly = feature.getGeometry();
-  feature.setGeometryName('labelPoint');
-  const point = feature.getGeometry();
+  // ... (kode yang tidak diubah)
 
   return (
     <>

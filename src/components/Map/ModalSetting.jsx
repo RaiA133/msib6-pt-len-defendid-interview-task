@@ -2,6 +2,14 @@ import GearIcon from '../../assets/icons/gear.svg';
 import DdToDms from './partials/DdToDms';
 import DmsToDd from './partials/DmsToDd';
 
+/**
+ * Komponen React untuk menampilkan modal pengaturan.
+ *
+ * @component
+ * @param {Object} props - Properti komponen.
+ * @param {Function} props.setModalSetting - Fungsi untuk mengatur keadaan modal.
+ * @returns {JSX.Element} - Elemen JSX modal pengaturan.
+ */
 const ModalSetting = ({ setModalSetting }) => {
 
   return (
