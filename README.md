@@ -10,6 +10,13 @@ Currently, two official plugins are available:
 
 ## installation
 
+
+```bash
+git clone https://github.com/RaiA133/msib6-pt-len-defendid-interview-task.git
+```
+```bash
+cd .\msib6-pt-len-defendid-interview-task
+```
 ```bash
 npm install
 ```
