@@ -54,6 +54,16 @@ const MapPage = () => {
 
   }, [zoom]);
 
+  const handleZoomIn = () => {
+    console.log("Zoom In button clicked");
+    setZoom((prevZoom) => prevZoom + 1);
+  };
+  
+  const handleZoomOut = () => {
+    console.log("Zoom Out button clicked");
+    setZoom((prevZoom) => Math.max(prevZoom - 1, 1));
+  };
+
   const showPopup = (e) => {
     const offsetX = 2; // Jarak horizontal dari kursor
     const offsetY = 2; // Jarak vertikal dari kursor
@@ -69,14 +79,6 @@ const MapPage = () => {
   const copyCoordinates = (type) => {
     const coordinatesToCopy = type === 1 ? popupCoordinate : popupCoordinateHdms;
     navigator.clipboard.writeText(coordinatesToCopy);
-  };
-
-  const handleZoomIn = () => {
-    setZoom((prevZoom) => prevZoom + 1);
-  };
-  
-  const handleZoomOut = () => {
-    setZoom((prevZoom) => Math.max(prevZoom - 1, 1));
   };
 
   const locationMarker = new Feature({

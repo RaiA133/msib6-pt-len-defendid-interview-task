@@ -29,18 +29,13 @@ const DdToDms = () => {
 
   // fungsi untuk add to map
   const handleAddToMap = () => {
-    // Ambil nilai latitude dan longitude dari state
     const lat = parseFloat(latitude);
     const lon = parseFloat(longitude);
-
-    // Tambahkan marker pada peta
     addMarker(lat, lon);
   };
 
 
   var polyCoords = '[3143090.603086447, 9928281.393790578], [3283734.7351311715, 9928892.890016861], [3181003.3691158947, 9849398.380600277], [3143090.603086447, 9928281.393790578]';
-
-  // this Point var works only when no quotes are used in definiton!
   var pointCoords = [3229617.319105267, 9916160.39109719];
 
   const feature = new Feature({
@@ -48,13 +43,8 @@ const DdToDms = () => {
     labelPoint: new Point(pointCoords),
     name: 'My Polygon',
   });
-    // get the polygon geometry
   const poly = feature.getGeometry();
-
-  // Render the feature as a point using the coordinates from labelPoint
   feature.setGeometryName('labelPoint');
-
-  // get the point geometry
   const point = feature.getGeometry();
 
   return (
