@@ -3,14 +3,17 @@ import 'ol/ol.css';
 import '../assets/css/PopUpCoord.css';
 import '../../node_modules/ol/ol.css';
 import Map from 'ol/Map.js';
-import OSM from 'ol/source/OSM.js';
-import TileLayer from 'ol/layer/Tile.js';
 import View from 'ol/View.js';
-import Overlay from 'ol/Overlay.js';
 import XYZ from 'ol/source/XYZ.js';
-import { toLonLat } from 'ol/proj.js';
+import { fromLonLat, toLonLat } from 'ol/proj.js';
 import { toStringHDMS } from 'ol/coordinate.js';
 import ModalSetting from '../components/Map/ModalSetting';
+import Feature from 'ol/Feature.js';
+import Point from 'ol/geom/Point.js';
+import {Icon, Style} from 'ol/style.js';
+import {OGCMapTile, Vector as VectorSource} from 'ol/source.js';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
+
 
 const MapPage = () => {
   const [zoom, setZoom] = useState(2);
@@ -19,14 +22,13 @@ const MapPage = () => {
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [modalSetting, setModalSetting] = useState(false)
-  console.log(modalSetting)
+
   const key = 'co2aeeDSB4uXmd30LYwi';
   const attributions =
     '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
     '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
   useEffect(() => {
-
     const map = new Map({
       layers: [
         new TileLayer({
@@ -43,22 +45,14 @@ const MapPage = () => {
         zoom: zoom,
       }),
     });
-    map.on('singleclick', function (evt) {
+    map.on('dblclick', function (evt) {
       const coordinate = evt.coordinate;
       const hdmsCoord = toStringHDMS(toLonLat(coordinate));
-      console.log(hdmsCoord)
       setPopupCoordinate(toLonLat(coordinate));
       setPopupCoordinateHdms(hdmsCoord);
     });
+
   }, [zoom]);
-
-  const handleZoomOut = () => {
-    setZoom((prevZoom) => Math.max(prevZoom - 1, 1));
-  };
-
-  const handleZoomIn = () => {
-    setZoom((prevZoom) => prevZoom + 1);
-  };
 
   const showPopup = (e) => {
     const offsetX = 2; // Jarak horizontal dari kursor
@@ -73,10 +67,54 @@ const MapPage = () => {
   };
 
   const copyCoordinates = (type) => {
-    // Logic to copy coordinates to clipboard
     const coordinatesToCopy = type === 1 ? popupCoordinate : popupCoordinateHdms;
     navigator.clipboard.writeText(coordinatesToCopy);
   };
+
+  const handleZoomIn = () => {
+    setZoom((prevZoom) => prevZoom + 1);
+  };
+  
+  const handleZoomOut = () => {
+    setZoom((prevZoom) => Math.max(prevZoom - 1, 1));
+  };
+
+  const locationMarker = new Feature({
+    geometry: new Point(fromLonLat([12.5, 41.9])),
+  });
+
+  locationMarker.setStyle(
+    new Style({
+      image: new Icon({
+        color: '#BADA55',
+        crossOrigin: 'anonymous',
+        src: 'data/square.svg',
+      }),
+    })
+  );
+
+  const vectorSource = new VectorSource({
+    features: [locationMarker],
+  });
+  
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+  });
+  
+  const rasterLayer = new TileLayer({
+    source: new OGCMapTile({
+      url: 'https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad',
+      crossOrigin: '',
+    }),
+  });
+  const map = new Map({
+    layers: [rasterLayer, vectorLayer],
+    target: document.getElementById('map'),
+    view: new View({
+      center: fromLonLat([2.896372, 44.6024]),
+      zoom: 3,
+    }),
+  });
 
   return (
 
@@ -114,7 +152,7 @@ const MapPage = () => {
         Go to map
       </a>
 
-      <div id="map" className="map h-screen" tabIndex="0" onClick={showPopup}>
+      <div id="map" className="map h-screen" tabIndex="0" onDoubleClick={showPopup}>
         <ModalSetting setModalSetting={setModalSetting}/>
         <div className="flex gap-2 m-2 absolute bottom-0 z-10">
           <button onClick={handleZoomIn} className="btn" >Zoom in</button>

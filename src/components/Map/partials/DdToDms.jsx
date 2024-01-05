@@ -1,6 +1,10 @@
 import { toStringHDMS } from 'ol/coordinate.js';
 import { useState } from 'react';
 import { splitCoordinates, convertToNestedArray, converteDmsToObject } from '../../../hooks/conversiDMS';
+import Feature from 'ol/Feature.js';
+import Polygon from 'ol/geom/Polygon.js';
+import Point from 'ol/geom/Point.js';
+
 
 const DdToDms = () => {
   const [coord, setCoord] = useState([90.000000, 33.230000]);
@@ -21,6 +25,37 @@ const DdToDms = () => {
   const splitOneByOne = splitCoordinates(convertedCoordinates);
   const splitLonLat = convertToNestedArray(splitOneByOne)
   const dmsJson = converteDmsToObject(splitLonLat)
+
+
+  // fungsi untuk add to map
+  const handleAddToMap = () => {
+    // Ambil nilai latitude dan longitude dari state
+    const lat = parseFloat(latitude);
+    const lon = parseFloat(longitude);
+
+    // Tambahkan marker pada peta
+    addMarker(lat, lon);
+  };
+
+
+  var polyCoords = '[3143090.603086447, 9928281.393790578], [3283734.7351311715, 9928892.890016861], [3181003.3691158947, 9849398.380600277], [3143090.603086447, 9928281.393790578]';
+
+  // this Point var works only when no quotes are used in definiton!
+  var pointCoords = [3229617.319105267, 9916160.39109719];
+
+  const feature = new Feature({
+    geometry: new Polygon(polyCoords),
+    labelPoint: new Point(pointCoords),
+    name: 'My Polygon',
+  });
+    // get the polygon geometry
+  const poly = feature.getGeometry();
+
+  // Render the feature as a point using the coordinates from labelPoint
+  feature.setGeometryName('labelPoint');
+
+  // get the point geometry
+  const point = feature.getGeometry();
 
   return (
     <>

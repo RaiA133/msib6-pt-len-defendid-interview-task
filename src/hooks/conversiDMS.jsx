@@ -51,7 +51,7 @@ export function converteDmsToObject(inputArray) {
     outputObject.latitude = inputArray[0].join(" ");
     outputObject.longitude = inputArray[1].join(" ");
   } else {
-    console.log("Invalid input");
+    // console.log("Invalid input");
   }
   return outputObject
 }
